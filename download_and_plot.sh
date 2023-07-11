@@ -18,4 +18,15 @@ else
 	python LIFTsounding.py /home/jfischer/KITCUBEmount/sftp-upload/RASO/VS/$fileNameVS Villingen
 fi
 
+name=${fileNameKO%.bfr}.png
+if [ -f "$name" ]; then
+        echo "KO sounding is up to date"
+else
+        echo $name      
+        python LIFTsounding.py /home/jfischer/KITCUBEmount/sftp-upload/RASO/VS/$fileNameKO Koestlach
+fi
 
+
+git add --all
+git commit -m "New sounding upload"
+git push https://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@github.com/janfisch/LIFTsoundings.git
