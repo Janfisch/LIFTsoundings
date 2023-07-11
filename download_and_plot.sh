@@ -4,7 +4,15 @@
 #fileNameVS=$(echo "ls -1rt *0.bfr" | sftp -P 24 sftpuser@thredds.atmohub.kit.edu:/home/sftpuser/sftp-upload/RASO/VS/ | tail -1)
 #fileNameVS=$(echo "ls -1rt *0.bfr" | sftp -P 24 sftpuser@thredds.atmohub.kit.edu:/home/sftpuser/sftp-upload/RASO/KOE/ | tail -1)
 fileNameVS=$((cd /home/jfischer/KITCUBEmount/sftp-upload/RASO/VS/ && ls -1rt bufr309057*0.bfr ) | tail -1)
-fileNameKO=$((cd /home/jfischer/KITCUBEmount/sftp-upload/RASO/KOE/ && ls -1rt bufr309057*2.bfr ) | tail -1)
+fileNameKO=$((cd /home/jfischer/KITCUBEmount/sftp-upload/RASO/KOE/ && ls -1rt bufr309057*1.bfr ) | tail -1)
+
+pngVS=${fileNameVS%.bfr}.png
+pngKO=${fileNameKO%.bfr}.png
+
+if [ -f "$pngVS" ] && [ -f "$pngKO" ]; then
+	echo "soundings are up to date"
+
+else
 
 source /home/jfischer/mambaforge/etc/profile.d/conda.sh
 conda activate LIFTsoundings
@@ -30,3 +38,8 @@ fi
 git add --all
 git commit -m "New sounding upload"
 git push https://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@github.com/janfisch/LIFTsoundings.git
+
+
+fi
+
+
