@@ -8,6 +8,7 @@ fileNameKO=$((cd /home/jfischer/KITCUBEmount/sftp-upload/RASO/KOE/ && ls -1rt bu
 
 pngVS=${fileNameVS%.bfr}.png
 pngKO=${fileNameKO%.bfr}.png
+cd /home/jfischer/LIFT_soundings
 
 if [ -f "$pngVS" ] && [ -f "$pngKO" ]; then
 	echo "soundings are up to date"
@@ -23,7 +24,7 @@ if [ -f "$name" ]; then
 	echo "VS sounding is up to date"
 else
 	echo $name	
-	python LIFTsounding.py /home/jfischer/KITCUBEmount/sftp-upload/RASO/VS/$fileNameVS Villingen
+	python /home/jfischer/LIFT_sondings/LIFTsounding.py /home/jfischer/KITCUBEmount/sftp-upload/RASO/VS/$fileNameVS Villingen
 fi
 
 name=${fileNameKO%.bfr}.png
