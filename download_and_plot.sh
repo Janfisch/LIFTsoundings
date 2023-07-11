@@ -16,5 +16,6 @@ if [ -f "$name" ]; then
 else
 	echo $name	
 	python LIFTsounding.py /home/jfischer/KITCUBEmount/sftp-upload/RASO/VS/$fileNameVS Villingen
-	echo “Soundings attached” | mailx –s “Sounding delivery” –a ./$fileNameVS cuckoo_janni@live.de	
 fi
+
+
