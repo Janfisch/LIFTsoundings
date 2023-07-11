@@ -24,7 +24,7 @@ if [ -f "$name" ]; then
 	echo "VS sounding is up to date"
 else
 	echo $name	
-	python /home/jfischer/LIFT_sondings/LIFTsounding.py /home/jfischer/KITCUBEmount/sftp-upload/RASO/VS/$fileNameVS Villingen
+	python /home/jfischer/LIFT_soundings/LIFTsounding.py /home/jfischer/KITCUBEmount/sftp-upload/RASO/VS/$fileNameVS Villingen
 fi
 
 name=${fileNameKO%.bfr}.png
