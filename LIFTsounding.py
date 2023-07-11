@@ -247,8 +247,10 @@ if sharppyFailed == False:
 
     ## ECAPE 
     cape_type = 'most_unstable'
-    ecape = calc_ecape(z_AGL, p, T, q, u, v, cape_type)
-    
+    try:
+        ecape = calc_ecape(z_AGL, p, T, q, u, v, cape_type)
+    except:
+        ecape=0
     print("[+] PARCEL AND THERMODYNAMIC CALCULATIONS COMPLETE")
     
     
