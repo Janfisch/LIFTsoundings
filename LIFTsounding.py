@@ -250,7 +250,7 @@ if sharppyFailed == False:
     try:
         ecape = calc_ecape(z_AGL, p, T, q, u, v, cape_type)
     except:
-        ecape=0
+        ecape=0 * units.m
     print("[+] PARCEL AND THERMODYNAMIC CALCULATIONS COMPLETE")
     
     
