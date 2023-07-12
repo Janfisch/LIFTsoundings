@@ -53,7 +53,7 @@ meta = pdbufr.read_bufr(BUFRfile, columns=("latitude", "longitude","year","month
 df = pdbufr.read_bufr(BUFRfile, 
     columns=("pressure","nonCoordinateGeopotentialHeight","airTemperature","dewpointTemperature","windDirection","windSpeed", "timePeriod"))
 # remove first row if nan (needed for BUFR files)
-df=df.loc[~(np.isnan(df.timePeriod) & (df.pressure==100000))]
+df=df.loc[~(np.isnan(df.timePeriod) & (df.pressure>90000))]
 
 
 # USER DATA------------------------------
@@ -148,27 +148,32 @@ if sharppyFailed == False:
     sbT_trace = sbpcl.ttrace*units.degC                                                   # create sfc parcel T trace 
     sbP_trace = sbpcl.ptrace*units.hPa 
     sb_lcl_p   = int(sbpcl.lclpres) *units.hPa                                            # calc SB LCL (hPa)
-    sb_lcl_hgt = int(sbpcl.lclhght) *units.m                                              # calc SB LCL (m) 
-    try:                                                                                  # try SHARPPY height calcs 
+    sb_lcl_hgt = int(sbpcl.lclhght) *units.m                                              # calc SB LCL (m) # try SHARPPY height calcs 
+    try:
         sb_lfc_p   = int(sbpcl.lfcpres) *units.hPa                                        # calc SB LFC (hPa)
         sb_lfc_hgt = int(sbpcl.lfchght) *units.m                                          # calc SB LFC (m)
         sb_el_p    = int(sbpcl.elpres ) *units.hPa                                        # calc SB EL(hPa)
         sb_el_hgt  = int(sbpcl.elhght ) *units.m                                          # calc SB EL (m)
         #sb_mpl_hgt = int(sbpcl.mplhght) *units.m                                          # calc SB MPL (m)
-    except:                                                                               # upon failure, set all to NaN
+        sbcape  = int(sbpcl.bplus)                                                            # calc SBCAPE
+        sbcin   = int(sbpcl.bminus)                                                           # calc SBCIN
+        sb3cape = int(sbpcl.b3km)                                                             # calc SB 3CAPE
+        sb6cape = int(sbpcl.b6km)                                                             # calc SB 6CAPE
+        sb_li    = int(sbpcl.li5) 
+    except:  # upon failure, set all to NaN
+        #sb_lcl_p   = float("NaN") *units.hPa                                            # calc SB LCL (hPa)
+        #sb_lcl_hgt = float("NaN") *units.m                                              # calc SB LCL (m) 
         sb_lfc_p         =  float("NaN")*units.hPa                                        # set SB LFC p to 'Nan' 
         sb_lfc_hgt       =  float("NaN")*units.m                                          # set SB LFC m to 'Nan' 
         sb_el_p          =  float("NaN")*units.hPa                                        # set SB EL p to 'Nan'
         sb_el_hgt        =  float("NaN")*units.m                                          # set SB EL m to 'Nan'
         sb_mpl_hgt       =  float("NaN")*units.m                                          # set SB MPL m to 'Nan'
-        pass
-    # buoyancy 
+        
     sbcape  = int(sbpcl.bplus)                                                            # calc SBCAPE
     sbcin   = int(sbpcl.bminus)                                                           # calc SBCIN
     sb3cape = int(sbpcl.b3km)                                                             # calc SB 3CAPE
     sb6cape = int(sbpcl.b6km)                                                             # calc SB 6CAPE
-    sb_li    = int(sbpcl.li5) 
-                                                      
+    sb_li    = int(sbpcl.li5)                                               
 
     # MIXED PARCEL ------------------------------------------------------------------------------------------------
     depth = (p[0].m - interp.pres(prof, interp.to_msl(prof, 1000)))*units.hPa             # calculate mixed layer depth
@@ -480,7 +485,7 @@ plt.ylabel("  ", fontsize=12)                                                 # 
 #PLOT TITLE--------------------------------------------------------------------------------------
 plt.figtext( 0.10, 0.96, f'{city}',
        weight='bold', ha='left', fontsize=22, color='black')
-plt.figtext( 1.22, 0.96, f'VALID:  {utc_date.hour}Z | {utc_month}/{utc_day}/{utc_year}  ',
+plt.figtext( 1.22, 0.96, f'VALID:  {utc_date.hour}:{str(utc_date.minute).zfill(2)}Z | {utc_month}/{utc_day}/{utc_year}  ',
         weight='bold', ha='right', fontsize=22, color='black')
 print("[+] SKEW T OBJECT CREATION COMPLETE")
 ############################################################################################################################
@@ -532,7 +537,7 @@ blank_len = len(u[idx])                                                         
 blank = np.zeros(blank_len)                                                      # fill blank barbs with 0kts 
 skew.plot_barbs(pressure=p[idx],u=blank,v=blank,xloc=0.953,fill_empty=True,      # plot empty wind barbs 
                 sizes=dict(emptybarb=0.075, width=0.18, height=0.4))
-skew.plot_barbs(pressure=p[idx], u=u[idx], v=v[idx],xloc=0.953, fill_empty=True,  # plot actual resampled wind barbs
+skew.plot_barbs(pressure=p[idx], u=u[idx].to(units.knots), v=v[idx].to(units.knots),xloc=0.953, fill_empty=True,  # plot actual resampled wind barbs
                 sizes=dict(emptybarb=0.075, width=0.18, height=0.4), length=9)
 
 # Draw line underneath wind barbs
