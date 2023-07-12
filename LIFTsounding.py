@@ -65,7 +65,7 @@ utc_day   = str(int(meta.values[0][2]))           # launch day
 utc_hour  = str(int(meta.values[0][3]))           # launch hour 
 utc_min  = str(int(meta.values[0][4]))
 utc_date = datetime(int(utc_year), int(utc_month), int(utc_day), int(utc_hour), int(utc_min))  # create datetime object with UTC launch data
-utc_date = utc_date.replace(second=0, microsecond=0, minute=0, hour=utc_date.hour)+timedelta(hours=utc_date.minute//30)  # round launch time to nearest hour
+#utc_date = utc_date.replace(second=0, microsecond=0, minute=0, hour=utc_date.hour)+timedelta(hours=utc_date.minute//30)  # round launch time to nearest hour
 
 
 
